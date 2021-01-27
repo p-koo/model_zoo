@@ -1,5 +1,5 @@
 from tensorflow import keras
-
+import sys
 sys.path.append('..')
 from tfomics.layers import RevCompConv1D, RevCompMaxPool
 

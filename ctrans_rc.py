@@ -16,12 +16,14 @@ def model(input_shape, num_labels, dims, num_heads=12, num_layers=4, pool_size=5
   inputs = keras.layers.Input(shape=input_shape)
 
   # layer 1 - convolution
-  nn = RevCompConv1D(filters=dims, kernel_size=19, use_bias=True, padding='same',
+  nn, nn2 = RevCompConv1D(filters=dims, kernel_size=19, use_bias=True, padding='same',
                            kernel_regularizer=l2, concat=False)(inputs)        
   if bn:
     nn = keras.layers.BatchNormalization()(nn)
+    nn2 = keras.layers.BatchNormalization()(nn2)
   nn = keras.layers.Activation('exponential')(nn)
-  nn = RevCompMaxPool()(nn)
+  nn2 = keras.layers.Activation('exponential')(nn2)
+  nn = RevCompMaxPool()(nn, nn2)
   nn = keras.layers.MaxPool1D(pool_size=pool_size)(nn)
   nn = keras.layers.Dropout(0.1)(nn)
 
