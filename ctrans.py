@@ -20,7 +20,7 @@ def model(input_shape, num_labels, dims, num_heads=12, num_layers=4, pool_size=5
                            kernel_regularizer=l2)(inputs)        
   if bn:
     nn = keras.layers.BatchNormalization()(nn)
-  nn = keras.layers.Activation('exponential')(nn)
+  nn = keras.layers.Activation(activation)(nn)
   nn = keras.layers.MaxPool1D(pool_size=pool_size)(nn)
   nn = keras.layers.Dropout(0.1)(nn)
 
