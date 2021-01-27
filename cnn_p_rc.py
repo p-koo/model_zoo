@@ -23,7 +23,7 @@ def model(input_shape, num_labels, activation='relu', pool_size=25, units=[32, 1
   else:
     use_bias = True
      
-  nn, nn2 = RevCompConv1D(filters=dims, kernel_size=19, use_bias=use_bias, padding='same',
+  nn, nn2 = RevCompConv1D(filters=units[0], kernel_size=19, use_bias=use_bias, padding='same',
                            kernel_regularizer=l2, concat=False)(inputs)        
 
   if bn:
