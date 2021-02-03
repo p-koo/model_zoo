@@ -1,8 +1,9 @@
 from tensorflow import keras
 
 
-def model(input_shape, num_labels, activation='relu', pool_size=25, units=[32, 128, 512], 
-          dropout=[0.1, 0.1, 0.5], l2=None, bn=False):
+def model(input_shape, num_labels, activation='relu', pool_size=25, 
+          units=[32, 128, 512], dropout=[0.1, 0.1, 0.5], 
+          bn=[False, True, True], l2=None):
   
   L, A = input_shape
   pool_size2 = L // pool_size
@@ -15,19 +16,22 @@ def model(input_shape, num_labels, activation='relu', pool_size=25, units=[32, 1
   inputs = keras.layers.Input(shape=(L,A))
 
   # layer 1 - convolution
-  if bn:
-    use_bias = False
-  else:
-    use_bias = True
+  use_bias = []
+  for status in bn:
+    if status:
+      use_bias.append(True)
+    else:
+      use_bias.append(False)
+
   nn = keras.layers.Conv1D(filters=units[0],
                            kernel_size=19,
                            strides=1,
                            activation=None,
-                           use_bias=use_bias,
+                           use_bias=use_bias[0],
                            padding='same',
                            kernel_regularizer=l2, 
                            )(inputs)
-  if bn:
+  if bn[0]:
     nn = keras.layers.BatchNormalization()(nn)
   nn = keras.layers.Activation(activation)(nn)
   nn = keras.layers.MaxPool1D(pool_size=pool_size)(nn)
@@ -38,11 +42,12 @@ def model(input_shape, num_labels, activation='relu', pool_size=25, units=[32, 1
                            kernel_size=7,
                            strides=1,
                            activation=None,
-                           use_bias=False,
+                           use_bias=use_bias[1],
                            padding='same',
                            kernel_regularizer=l2, 
-                           )(nn)        
-  nn = keras.layers.BatchNormalization()(nn)
+                           )(nn)  
+  if bn[1]:        
+    nn = keras.layers.BatchNormalization()(nn)
   nn = keras.layers.Activation('relu')(nn)
   nn = keras.layers.MaxPool1D(pool_size=pool_size2)(nn)
   nn = keras.layers.Dropout(dropout[1])(nn)
@@ -51,10 +56,11 @@ def model(input_shape, num_labels, activation='relu', pool_size=25, units=[32, 1
   nn = keras.layers.Flatten()(nn)
   nn = keras.layers.Dense(units[2],
                           activation=None,
-                          use_bias=False,
+                          use_bias=use_bias[2],
                           kernel_regularizer=l2, 
                           )(nn)      
-  nn = keras.layers.BatchNormalization()(nn)
+  if bn[2]:
+    nn = keras.layers.BatchNormalization()(nn)
   nn = keras.layers.Activation('relu')(nn)
   nn = keras.layers.Dropout(dropout[2])(nn)
 
@@ -63,8 +69,6 @@ def model(input_shape, num_labels, activation='relu', pool_size=25, units=[32, 1
   outputs = keras.layers.Activation('sigmoid')(logits)
 
   # create keras model
-  model = keras.Model(inputs=inputs, outputs=outputs)
+  return keras.Model(inputs=inputs, outputs=outputs)
 
-
-  return model
 
