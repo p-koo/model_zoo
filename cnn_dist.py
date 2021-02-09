@@ -1,8 +1,8 @@
 from tensorflow import keras
 
 def model(input_shape, num_labels, activation='relu', 
-          units=[24, 32, 48, 64, 96], dropout=[0.1, 0.2, 0.3, 0.4, 0.5], 
-          bn=[False, True, True, True, True], l2=None):
+          units=[24, 32, 64, 96], dropout=[0.2, 0.2, 0.2, 0.5], 
+          bn=[True, True, True, True], l2=None):
 
   # l2 regularization
   if l2 is not None:
@@ -31,23 +31,9 @@ def model(input_shape, num_labels, activation='relu',
     nn = keras.layers.BatchNormalization()(nn)
   nn = keras.layers.Activation(activation)(nn)
   nn = keras.layers.Dropout(dropout[0])(nn)
+  nn = keras.layers.MaxPool1D(pool_size=4)(nn)
 
   # layer 2
-  nn = keras.layers.Conv1D(filters=units[1],
-                           kernel_size=7,
-                           strides=1,
-                           activation=None,
-                           use_bias=use_bias[1],
-                           padding='same',
-                           kernel_regularizer=l2, 
-                           )(inputs)
-  if bn[1]:
-    nn = keras.layers.BatchNormalization()(nn)
-  nn = keras.layers.Activation(activation)(nn)
-  nn = keras.layers.MaxPool1D(pool_size=4)(nn)
-  nn = keras.layers.Dropout(dropout[1])(nn)
-
-  # layer 3
   nn = keras.layers.Conv1D(filters=units[2],
                            kernel_size=5,
                            strides=1,
@@ -55,29 +41,29 @@ def model(input_shape, num_labels, activation='relu',
                            use_bias=use_bias[2],
                            padding='same',
                            kernel_regularizer=l2, 
-                           )(inputs)
+                           )(nn)
   if bn[2]:
     nn = keras.layers.BatchNormalization()(nn)
   nn = keras.layers.Activation(activation)(nn)
   nn = keras.layers.MaxPool1D(pool_size=4)(nn)
   nn = keras.layers.Dropout(dropout[2])(nn)
 
-  # layer 4
+  # layer 3
   nn = keras.layers.Conv1D(filters=units[3],
-                           kernel_size=3,
+                           kernel_size=5,
                            strides=1,
                            activation=None,
                            use_bias=use_bias[3],
                            padding='same',
                            kernel_regularizer=l2, 
-                           )(inputs)
+                           )(nn)
   if bn[3]:
     nn = keras.layers.BatchNormalization()(nn)
   nn = keras.layers.Activation(activation)(nn)
-  nn = keras.layers.MaxPool1D(pool_size=3)(nn)
+  nn = keras.layers.MaxPool1D(pool_size=4)(nn)
   nn = keras.layers.Dropout(dropout[3])(nn)
 
-  # layer 5 - Fully-connected 
+  # layer 4 - Fully-connected 
   nn = keras.layers.Flatten()(nn)
   nn = keras.layers.Dense(units[4],
                           activation=None,

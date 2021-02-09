@@ -2,8 +2,8 @@ from tensorflow import keras
 
 
 def model(input_shape, num_labels, activation='relu', pool_size=25, 
-          units=[32, 128, 512], dropout=[0.1, 0.1, 0.5], 
-          bn=[False, True, True], l2=None):
+          units=[32, 128, 512], dropout=[0.2, 0.2, 0.5], 
+          bn=[True, True, True], l2=None):
   
   L, A = input_shape
   pool_size2 = L // pool_size
