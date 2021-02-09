@@ -13,7 +13,7 @@ def model(input_shape, num_labels, filters=32, dims=128, num_heads=12, num_layer
   if l2 is not None:
     l2 = keras.regularizers.l2(l2)
 
-  for status in bn:
+  if bn:
     use_bias = True
   else: 
     use_bias = False
