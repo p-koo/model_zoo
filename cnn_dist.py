@@ -42,7 +42,7 @@ def model(input_shape, num_labels, activation='relu',
                            )(nn)
   if bn[1]:
     nn = keras.layers.BatchNormalization()(nn)
-  nn = keras.layers.Activation(activation)(nn)
+  nn = keras.layers.Activation('relu')(nn)
   nn = keras.layers.Dropout(dropout[1])(nn)
   nn = keras.layers.MaxPool1D(pool_size=4)(nn)
 
@@ -57,7 +57,7 @@ def model(input_shape, num_labels, activation='relu',
                            )(nn)
   if bn[2]:
     nn = keras.layers.BatchNormalization()(nn)
-  nn = keras.layers.Activation(activation)(nn)
+  nn = keras.layers.Activation('relu')(nn)
   nn = keras.layers.MaxPool1D(pool_size=4)(nn)
   nn = keras.layers.Dropout(dropout[2])(nn)
 
@@ -72,7 +72,7 @@ def model(input_shape, num_labels, activation='relu',
                            )(nn)
   if bn[3]:
     nn = keras.layers.BatchNormalization()(nn)
-  nn = keras.layers.Activation(activation)(nn)
+  nn = keras.layers.Activation('relu')(nn)
   nn = keras.layers.MaxPool1D(pool_size=4)(nn)
   nn = keras.layers.Dropout(dropout[3])(nn)
 
@@ -85,7 +85,7 @@ def model(input_shape, num_labels, activation='relu',
                           )(nn)      
   if bn[4]:
     nn = keras.layers.BatchNormalization()(nn)
-  nn = keras.layers.Activation(activation)(nn)
+  nn = keras.layers.Activation('relu')(nn)
   nn = keras.layers.Dropout(dropout[4])(nn)
 
   # Output layer 
