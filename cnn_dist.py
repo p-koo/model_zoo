@@ -39,7 +39,7 @@ def model(input_shape, num_labels, activation='relu',
                            use_bias=use_bias[1],
                            padding='same',
                            kernel_regularizer=l2, 
-                           )(inputs)
+                           )(nn)
   if bn[1]:
     nn = keras.layers.BatchNormalization()(nn)
   nn = keras.layers.Activation(activation)(nn)
