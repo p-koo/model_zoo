@@ -1,19 +1,16 @@
 from tensorflow import keras
 
 
-def model(input_shape, num_labels, activation='relu', pool_size=25, 
+def model(input_shape, num_labels, activation='relu', pool_size=[25, 4], 
           units=[32, 128, 512], dropout=[0.2, 0.2, 0.5], 
           bn=[True, True, True], l2=None):
   
-  L, A = input_shape
-  pool_size2 = L // pool_size
-
   # l2 regularization
   if l2 is not None:
     l2 = keras.regularizers.l2(l2)
 
   # input layer
-  inputs = keras.layers.Input(shape=(L,A))
+  inputs = keras.layers.Input(shape=input_shape)
 
   # layer 1 - convolution
   use_bias = []
@@ -34,7 +31,7 @@ def model(input_shape, num_labels, activation='relu', pool_size=25,
   if bn[0]:
     nn = keras.layers.BatchNormalization()(nn)
   nn = keras.layers.Activation(activation)(nn)
-  nn = keras.layers.MaxPool1D(pool_size=pool_size)(nn)
+  nn = keras.layers.MaxPool1D(pool_size=pool_size[0])(nn)
   nn = keras.layers.Dropout(dropout[0])(nn)
 
   # layer 2 - convolution
@@ -49,7 +46,7 @@ def model(input_shape, num_labels, activation='relu', pool_size=25,
   if bn[1]:        
     nn = keras.layers.BatchNormalization()(nn)
   nn = keras.layers.Activation('relu')(nn)
-  nn = keras.layers.MaxPool1D(pool_size=pool_size2)(nn)
+  nn = keras.layers.MaxPool1D(pool_size=pool_size[1])(nn)
   nn = keras.layers.Dropout(dropout[1])(nn)
 
   # layer 3 - Fully-connected 

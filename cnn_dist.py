@@ -16,7 +16,7 @@ def model(input_shape, num_labels, activation='relu',
       use_bias.append(False)
 
   # input layer
-  inputs = keras.layers.Input(shape=(200,4))
+  inputs = keras.layers.Input(shape=input_shape)
 
   # layer 1
   nn = keras.layers.Conv1D(filters=units[0],

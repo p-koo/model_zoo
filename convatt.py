@@ -22,7 +22,7 @@ def model(input_shape, num_labels, filters=32, dims=64, num_heads=12, num_layers
 
   # layer 1 - convolution
   if rc:  
-    nn = keras.layers.RevCompConv1D(filters=filters, kernel_size=19, use_bias=use_bias, padding='same',
+    nn = RevCompConv1D(filters=filters, kernel_size=19, use_bias=use_bias, padding='same',
                                     kernel_regularizer=l2, concat=True)(inputs)      
   else:
     nn = keras.layers.Conv1D(filters=filters, kernel_size=19, use_bias=use_bias, padding='same',

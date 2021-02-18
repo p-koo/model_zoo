@@ -36,7 +36,7 @@ def model(input_shape, num_labels, activation='relu', units=[32, 128, 512], pool
   fwd = keras.layers.Dropout(dropout[0])(fwd)
 
   rev = keras.layers.Activation(activation)(rev)
-  rev = keras.layers.MaxPool1D(pool_size=pool_size)(rev)
+  rev = keras.layers.MaxPool1D(pool_size=pool_size[0])(rev)
   rev = keras.layers.Dropout(dropout[0])(rev)
 
 
@@ -49,7 +49,8 @@ def model(input_shape, num_labels, activation='relu', units=[32, 128, 512], pool
   fwd = keras.layers.Activation('relu')(fwd)
   rev = keras.layers.Activation('relu')(rev)
 
-  # nn = RevCompMaxPool()(fwd, rev, reverse=False)
+  #nn = RevCompMaxPool()(fwd, rev, reverse=False)
+  nn = keras.layers.Concatenate()([fwd,rev])
   nn = keras.layers.MaxPool1D(pool_size=pool_size[1])(nn)
   nn = keras.layers.Dropout(dropout[1])(nn)
 
